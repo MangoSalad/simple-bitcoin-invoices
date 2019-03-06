@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+package protobuf;
+
+// The invoice service definition.
+service Invoice {
+    // Returns an invoice.
+    rpc CreateInvoice (InvoiceRequest) returns (InvoiceResponse) {}
+
+    // Returns invoice for a particular invoice id.
+    rpc GetInvoice (InvoiceGetRequest) returns (InvoiceResponse) {}
+
+    // Returns status on a particular invoice. 
+    rpc CheckInvoice (InvoiceCheckRequest) returns (InvoiceCheckResponse) {}
+}
+
+// The request message containing price for invoice in notional fiat value.
+message InvoiceRequest {
+    int32 value = 1;
+}
+
+// The request message containing an invoice id to check status for. // Invoice id will be bitcoin address.
+message InvoiceCheckRequest {
+    string invoice_id = 1;
+}
+
+// The request message containing an invoice id to check status for. // Invoice id will be bitcoin address.
+message InvoiceGetRequest {
+    string invoice_id = 1;
+  }
+  
+
+// The response message containing notional bitcoin value, notional fiat value, and expiry in unix timestamp.
+message InvoiceResponse {
+    int32 fiatValue = 1;
+    int32 digitalValue = 2;
+    int64 expiry = 3;
+    string invoice_id = 4;
+}
+
+// The response message containing status of invoice. Valid options are 'expired' 'partially_paid' 'paid' 'unpaid' //@TODO - 'overpaid'
+message InvoiceCheckResponse {
+    string status = 1;
+    int32 digitalValueRemaining = 2;
+  }

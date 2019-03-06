@@ -13,7 +13,7 @@ grpc server can stand alone as a backend to the frontend or for other clients.
 Responsive UI.
 
 ## Run
-```make deploy``
+```make deploy```
 
 Tests for server can be run with <br>
 ```make test```
