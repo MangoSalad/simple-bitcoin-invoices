@@ -34,7 +34,9 @@ Service can scale later by optimizing messages between the node<->backend and ba
 ## Run
 Running this code is very simple. You only need docker and docker-compose on your machine.
 
-```make deploy```
+```make deploy```<br>
+
+Frontend will run on :8080
 
 Tests for server can be run<br>
 ```cd server/ && make test```
