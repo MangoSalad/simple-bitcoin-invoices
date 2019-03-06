@@ -46,3 +46,9 @@ To list more options:
 * With the design, pretty straightforward to support alt coins.
 * Endpoint that allows merchant to request derivation paths of invoices.
 * Description fields for invoices.
+
+## Example
+![Creating an invoice.](docs/misc/createinvoice.png "Creating an invoice.")
+<br>
+![Showing an invoice.](docs/misc/showinvoice.png "Showing an invoice.")
+
