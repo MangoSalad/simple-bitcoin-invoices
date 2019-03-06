@@ -111,7 +111,8 @@ func (s *Server) getPrice(fiatValue int32) (int32, error) {
 	}
 
 	// integer to float
-	fiat := float64(fiatValue / 100.0)
+	fiat := float64(fiatValue) / 100.0
+	log.Print("FIAT", fiat)
 	query := req.URL.Query()
 	query.Add("currency", "USD")
 	// truncate to 2 decimal places
