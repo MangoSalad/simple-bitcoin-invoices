@@ -1,0 +1,37 @@
+version: '3'
+services:
+  btcd:
+    build:
+      context: ./btcd/
+      dockerfile: ./Dockerfile
+    image: btcd
+    ports:
+      - "18334:18334"
+      - "18444:18444"
+  btcwallet:
+    build:
+      context: ./btcwallet/
+      dockerfile: ./Dockerfile
+    depends_on:
+      - btcd
+    image: btcwallet
+    ports:
+      - "18332:18332"
+  go-server:
+    build:
+      context: ./server/
+      dockerfile: ./Dockerfile
+    image: go-server
+    depends_on:
+      - btcwallet
+    ports:
+      - "9090:9090"
+  envoy:
+    build:
+      context: ./envoy/
+      dockerfile: ./Dockerfile
+    image: envoy
+    ports:
+      - "8080:8080"
+    links:
+      - go-server
