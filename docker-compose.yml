@@ -35,3 +35,10 @@ services:
       - "8080:8080"
     links:
       - go-server
+  client:
+    build:
+      context: ./client/
+      dockerfile: ./Dockerfile
+    image: client
+    ports:
+      - "8081:80"

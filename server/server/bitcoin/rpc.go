@@ -8,6 +8,7 @@ import (
 
 	"github.com/btcsuite/btcd/chaincfg"
 	rpcclient "github.com/btcsuite/btcd/rpcclient"
+	txscript "github.com/btcsuite/btcd/txscript"
 	"github.com/btcsuite/btcutil"
 )
 
@@ -68,17 +69,31 @@ func (b *Bitcoinrpc) GetReceivedAmount(address string) (int32, error) {
 	}
 
 	// @TODO option to set conf policy
-	amount, err := b.Client.GetReceivedByAddressMinConf(encodedAddress, 0)
-	if err != nil {
-		log.Printf("could not fetch amount for address %s : %v", address, err.Error())
-		return 0, errors.New("could not get balance")
+	transactions, err := b.Client.SearchRawTransactions(encodedAddress, 0, 100, false, nil)
+	var paid int32
+	paid = 0
+
+	// @TODO - need to optimize, poor time complexity.
+
+	// for each transaction referenced by this address, check vout
+	for _, tx := range transactions {
+		for _, vout := range tx.TxOut {
+			_, addy, _, err := txscript.ExtractPkScriptAddrs(vout.PkScript, &chaincfg.TestNet3Params)
+			if err != nil {
+				log.Println("cannot extract pkscript")
+				return 0, errors.New("could not get balance")
+			}
+			for _, a := range addy {
+				// sum up vout value points if matches address
+				if a.EncodeAddress() == encodedAddress.EncodeAddress() {
+					paid += int32(vout.Value)
+				}
+			}
+		}
 	}
 
-	// convert to sats, floats are not nice
-	satoshis := amount.ToUnit(btcutil.AmountSatoshi)
-
-	log.Printf("%s owns %v satoshis", address, satoshis)
-	return int32(satoshis), nil
+	log.Printf("%s owns %v satoshis", address, paid)
+	return paid, nil
 }
 
 // IsValidAddress validates a given address

@@ -27,6 +27,15 @@ Tests for server can be run with <br>
 
 ##### Includes dummy keys and certificates. Use Btcd's gencerts service to generate new keys for services.
 
+## Manual Testing
+Enter the btcd image and use btcctl to interact with regression test.
+```docker exec -it <btcd_image> bash```
+```btcctl --testnet --rpcuser=user --rpcpass=password --rpccert=/root/.btcwallet/rpc.cert --rpcserver=btcwallet:18332 --wallet walletpassphrase test 10000```
+```btcctl --testnet --rpcuser=user --rpcpass=password --rpccert=/root/.btcd/rpc.cert --rpcserver=btcwallet:18332 generate 101```
+```btcctl --testnet  --rpcuser=user --rpcpass=password --rpccert=/root/.btcwallet/rpc.cert --rpcserver=btcwallet:18332  sendtoaddress <addy> <amount>```
+To list more options:
+```btcctl --testnet --rpcuser=user --rpcpass=password --rpccert=/root/.btcd/rpc.cert --rpcserver=btcwallet:18332 -l```
+
 ## TODO
 * Configuration file for backend that configures extended public key, confirmation policy, network configuration.
 * Frontend testing.
