@@ -1,4 +1,5 @@
 ## Simple Bitcoin Invoice
+##### Only for Testnet
 
 ## Components
 * gRPC backend written in Go. Maintains api, invoice ledger, and key derivation.
@@ -7,6 +8,12 @@
 * BtcWallet golang wallet implementation by BtcSuite for maintaing balance ledger. Communication with websockets with TLS.
 * Btcctl for manual testing over cli.
 * Client is ReactJS frontend for issuing and viewing invoices.
+
+## Technologies Used
+* Go for backend.
+* ReactJS for frontend.
+* Protocol Buffers for messaging.
+* Docker for deployment.
 
 ## Implementation Decisions
 grpc server can stand alone as a backend to the frontend or for other clients.
@@ -17,6 +24,8 @@ Responsive UI.
 
 Tests for server can be run with <br>
 ```make test```
+
+##### Includes dummy keys and certificates. Use Btcd's gencerts service to generate new keys for services.
 
 ## TODO
 * Configuration file for backend that configures extended public key, confirmation policy, network configuration.
