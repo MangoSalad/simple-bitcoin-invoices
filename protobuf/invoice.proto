@@ -33,7 +33,7 @@ message InvoiceGetRequest {
 // The response message containing notional bitcoin value, notional fiat value, and expiry in unix timestamp.
 message InvoiceResponse {
     int32 fiatValue = 1;
-    int32 digitalValue = 2;
+    int64 digitalValue = 2;
     int64 expiry = 3;
     string invoice_id = 4;
 }
@@ -41,5 +41,5 @@ message InvoiceResponse {
 // The response message containing status of invoice. Valid options are 'expired' 'partially_paid' 'paid' 'unpaid' //@TODO - 'overpaid'
 message InvoiceCheckResponse {
     string status = 1;
-    int32 digitalValueRemaining = 2;
+    int64 digitalValueRemaining = 2;
   }

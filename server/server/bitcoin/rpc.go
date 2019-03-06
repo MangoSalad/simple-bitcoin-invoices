@@ -60,7 +60,7 @@ func (b *Bitcoinrpc) AddAddress(address string) error {
 }
 
 // GetReceivedAmount returns the amount owned by the address
-func (b *Bitcoinrpc) GetReceivedAmount(address string) (int32, error) {
+func (b *Bitcoinrpc) GetReceivedAmount(address string) (int64, error) {
 	log.Printf("Getting amount for address %s", address)
 	encodedAddress, err := btcutil.DecodeAddress(address, &chaincfg.TestNet3Params)
 	if err != nil {
@@ -70,7 +70,7 @@ func (b *Bitcoinrpc) GetReceivedAmount(address string) (int32, error) {
 
 	// @TODO option to set conf policy
 	transactions, err := b.Client.SearchRawTransactions(encodedAddress, 0, 100, false, nil)
-	var paid int32
+	var paid int64
 	paid = 0
 
 	// @TODO - need to optimize, poor time complexity.
@@ -86,7 +86,7 @@ func (b *Bitcoinrpc) GetReceivedAmount(address string) (int32, error) {
 			for _, a := range addy {
 				// sum up vout value points if matches address
 				if a.EncodeAddress() == encodedAddress.EncodeAddress() {
-					paid += int32(vout.Value)
+					paid += vout.Value
 				}
 			}
 		}

@@ -49,7 +49,7 @@ Compiling Go<br>
 ```make build```
 
 React build<br>
-```cd client && npm run-scripts build```
+```cd client && npm run-script build```
 
 ##### Includes dummy keys and certificates. Use Btcd's gencerts service to generate new keys for services.
 

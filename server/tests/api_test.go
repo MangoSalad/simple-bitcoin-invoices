@@ -15,10 +15,10 @@ type MockBitcoinNode struct {
 	mock.Mock
 }
 
-func (m *MockBitcoinNode) GetReceivedAmount(address string) (int32, error) {
+func (m *MockBitcoinNode) GetReceivedAmount(address string) (int64, error) {
 	log.Printf("GetReceivedAmount %s", address)
 	args := m.Called(address)
-	return args.Get(0).(int32), nil
+	return args.Get(0).(int64), nil
 }
 
 func (m *MockBitcoinNode) AddAddress(address string) error {
@@ -52,7 +52,7 @@ func TestInvoiceLifeycle(t *testing.T) {
 
 	// mock the response, address owns 0 utxo
 	dummyNode.On("IsValidAddress", respInvoice.InvoiceId).Return(true).Once()
-	dummyNode.On("GetReceivedAmount", respInvoice.InvoiceId).Return(int32(0), nil).Once()
+	dummyNode.On("GetReceivedAmount", respInvoice.InvoiceId).Return(int64(0), nil).Once()
 
 	// 2: check invoice
 	reqInvoiceCheck := &pb.InvoiceCheckRequest{InvoiceId: respInvoice.InvoiceId}
@@ -73,7 +73,7 @@ func TestInvoiceLifeycle(t *testing.T) {
 
 	// mock the response, address owns some utxo
 	dummyNode.On("IsValidAddress", respInvoice.InvoiceId).Return(true).Once()
-	dummyNode.On("GetReceivedAmount", respInvoice.InvoiceId).Return(int32(respGetInvoice.DigitalValue-500000), nil).Once()
+	dummyNode.On("GetReceivedAmount", respInvoice.InvoiceId).Return(int64(respGetInvoice.DigitalValue-int64(500000)), nil).Once()
 	reqInvoiceCheck2 := &pb.InvoiceCheckRequest{InvoiceId: respInvoice.InvoiceId}
 	resInvoiceCheck2, err := s.CheckInvoice(context.Background(), reqInvoiceCheck2)
 	assert.NoError(t, err)
@@ -81,7 +81,7 @@ func TestInvoiceLifeycle(t *testing.T) {
 
 	// 5: pay all of it
 	dummyNode.On("IsValidAddress", respInvoice.InvoiceId).Return(true).Once()
-	dummyNode.On("GetReceivedAmount", respInvoice.InvoiceId).Return(int32(respGetInvoice.DigitalValue), nil).Once()
+	dummyNode.On("GetReceivedAmount", respInvoice.InvoiceId).Return(int64(respGetInvoice.DigitalValue), nil).Once()
 	reqInvoiceCheck3 := &pb.InvoiceCheckRequest{InvoiceId: respInvoice.InvoiceId}
 	resInvoiceCheck3, err := s.CheckInvoice(context.Background(), reqInvoiceCheck3)
 	assert.NoError(t, err)
@@ -127,7 +127,7 @@ func TestPartiallyPaidInvoice(t *testing.T) {
 	assert.Equal(t, int32(3200), respInvoice.FiatValue)
 
 	btcRequested := respInvoice.DigitalValue
-	sixPercentOfTotal := (int32)(float64(btcRequested) * 0.06)
+	sixPercentOfTotal := (int64)(float64(btcRequested) * 0.06)
 
 	// pay 6% less than total
 	dummyNode.On("IsValidAddress", respInvoice.InvoiceId).Return(true).Once()
@@ -137,7 +137,7 @@ func TestPartiallyPaidInvoice(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, "partially_paid", resInvoiceCheck1.Status)
 
-	twoPercentOfTotal := (int32)(float64(btcRequested) * 0.02)
+	twoPercentOfTotal := (int64)(float64(btcRequested) * 0.02)
 
 	// pay 2% less than total, this should go through
 	dummyNode.On("IsValidAddress", respInvoice.InvoiceId).Return(true).Once()

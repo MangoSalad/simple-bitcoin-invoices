@@ -101,7 +101,7 @@ func (s *Server) getExpiry() int64 {
 }
 
 // getPrice queries blockchain.com for market price for pair XBT/USD
-func (s *Server) getPrice(fiatValue int32) (int32, error) {
+func (s *Server) getPrice(fiatValue int32) (int64, error) {
 	req, err := http.NewRequest("GET", "https://blockchain.com/tobtc", nil)
 	if err != nil {
 		log.Printf("cannot build request for xbt/usd : %v", err)
@@ -143,11 +143,11 @@ func (s *Server) getPrice(fiatValue int32) (int32, error) {
 	digitalValue := digitalFloatValue * math.Pow10(8)
 	log.Printf("Satoshi value %d", int(digitalValue))
 
-	return int32(digitalValue), nil
+	return int64(digitalValue), nil
 }
 
 // createInvoiceResponseProtobuf creates an InvoiceResponse protocol buffer
-func (s *Server) createInvoiceResponseProtobuf(fiatValue, digitalValue int32, expiry int64, invoiceID string) *pb.InvoiceResponse {
+func (s *Server) createInvoiceResponseProtobuf(fiatValue int32, digitalValue int64, expiry int64, invoiceID string) *pb.InvoiceResponse {
 	return &pb.InvoiceResponse{FiatValue: fiatValue, DigitalValue: digitalValue, Expiry: expiry, InvoiceId: invoiceID}
 }
 
@@ -183,7 +183,7 @@ func (s *Server) CheckInvoice(ctx context.Context, in *pb.InvoiceCheckRequest) (
 		}
 
 		amountToPay := invoice.DigitalValue
-		allowedInterval := (int32)(float64(amountToPay) * allowedIntervalPercentage)
+		allowedInterval := (int64)(float64(amountToPay) * allowedIntervalPercentage)
 
 		// within 2% range of payment
 		if amountPaid <= amountToPay+allowedInterval && amountPaid >= amountToPay-allowedInterval {
@@ -205,7 +205,7 @@ func (s *Server) CheckInvoice(ctx context.Context, in *pb.InvoiceCheckRequest) (
 }
 
 // createInvoiceCheckResponseProtobuf creates a checkresponse protocol buffer for checking statuses of invoices
-func (s *Server) createInvoiceCheckResponseProtobuf(status string, amountToPay int32) *pb.InvoiceCheckResponse {
+func (s *Server) createInvoiceCheckResponseProtobuf(status string, amountToPay int64) *pb.InvoiceCheckResponse {
 	return &pb.InvoiceCheckResponse{Status: status, DigitalValueRemaining: amountToPay}
 }
 

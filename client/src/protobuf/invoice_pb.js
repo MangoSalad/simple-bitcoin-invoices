@@ -535,7 +535,7 @@ proto.protobuf.InvoiceResponse.deserializeBinaryFromReader = function(msg, reade
       msg.setFiatvalue(value);
       break;
     case 2:
-      var value = /** @type {number} */ (reader.readInt32());
+      var value = /** @type {number} */ (reader.readInt64());
       msg.setDigitalvalue(value);
       break;
     case 3:
@@ -584,7 +584,7 @@ proto.protobuf.InvoiceResponse.serializeBinaryToWriter = function(message, write
   }
   f = message.getDigitalvalue();
   if (f !== 0) {
-    writer.writeInt32(
+    writer.writeInt64(
       2,
       f
     );
@@ -622,7 +622,7 @@ proto.protobuf.InvoiceResponse.prototype.setFiatvalue = function(value) {
 
 
 /**
- * optional int32 digitalValue = 2;
+ * optional int64 digitalValue = 2;
  * @return {number}
  */
 proto.protobuf.InvoiceResponse.prototype.getDigitalvalue = function() {
@@ -756,7 +756,7 @@ proto.protobuf.InvoiceCheckResponse.deserializeBinaryFromReader = function(msg, 
       msg.setStatus(value);
       break;
     case 2:
-      var value = /** @type {number} */ (reader.readInt32());
+      var value = /** @type {number} */ (reader.readInt64());
       msg.setDigitalvalueremaining(value);
       break;
     default:
@@ -797,7 +797,7 @@ proto.protobuf.InvoiceCheckResponse.serializeBinaryToWriter = function(message, 
   }
   f = message.getDigitalvalueremaining();
   if (f !== 0) {
-    writer.writeInt32(
+    writer.writeInt64(
       2,
       f
     );
@@ -821,7 +821,7 @@ proto.protobuf.InvoiceCheckResponse.prototype.setStatus = function(value) {
 
 
 /**
- * optional int32 digitalValueRemaining = 2;
+ * optional int64 digitalValueRemaining = 2;
  * @return {number}
  */
 proto.protobuf.InvoiceCheckResponse.prototype.getDigitalvalueremaining = function() {
